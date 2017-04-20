@@ -14,6 +14,19 @@ def plot(data, x, y, hue=None, markers=[None], linestyles=['-']):
     plt.ylabel(y)
     plt.xlabel(x)
 
+def scatter(data, x, y, hue=None, markers=[None]):
+    data = data.sort_values(x, ascending=True)
+    if hue:
+        for i,(key,grp) in enumerate(data.groupby(hue)):
+            marker = markers[i % len(markers)]
+            linestyle = linestyles[i % len(linestyles)]
+            plt.scatter(grp[x], grp[y], label=key, marker=marker)
+    else:
+        plt.scatter(data[x], data[y])
+
+    plt.ylabel(y)
+    plt.xlabel(x)
+
 def savefig(filename):
     if not os.path.exists(os.path.dirname(filename)):
         try:
