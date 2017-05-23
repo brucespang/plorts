@@ -1,0 +1,11 @@
+figure.figsize: 9, 5
+
+font.size: 12
+axes.labelsize: 12
+axes.titlesize: 18
+xtick.labelsize: 12
+ytick.labelsize: 12
+
+grid.linestyle: solid
+grid.color: dedddd
+grid.linewidth: 1.0

@@ -30,72 +30,19 @@
 
 from __future__ import division
 import matplotlib
+import matplotlib.pyplot as plt
 
-def set_color_palette(colors):
-    matplotlib.rcParams.update({
-        "axes.color_cycle": colors,
-        "patch.facecolor": colors[0],
-    })
-
-def set_style():
-    dark_gray = ".15"
-    light_gray = ".8"
-
-    style_dict = {
-        "figure.facecolor": "white",
-        "text.color": dark_gray,
-        "axes.labelcolor": dark_gray,
-        "legend.frameon": False,
-        "legend.numpoints": 1,
-        "legend.scatterpoints": 1,
-        "xtick.direction": "out",
-        "ytick.direction": "out",
-        "xtick.color": dark_gray,
-        "ytick.color": dark_gray,
-        "axes.axisbelow": True,
-        "image.cmap": "Greys",
-        "font.family": ["sans-serif"],
-        "font.sans-serif": ["Arial", "Liberation Sans",
-                            "Bitstream Vera Sans", "sans-serif"],
-        "grid.linestyle": "-",
-        "lines.solid_capstyle": "round",
-        "axes.grid": True,
-        "axes.facecolor": "white",
-        "axes.edgecolor": light_gray,
-        "axes.linewidth": 1,
-        "grid.color": light_gray,
-        "xtick.major.size": 0,
-        "ytick.major.size": 0,
-        "xtick.minor.size": 0,
-        "ytick.minor.size": 0,
-    }
-    matplotlib.rcParams.update(style_dict)
-
-def set_context(scaling=1, font_base=12):
-    base_context = {
-        "font.size": 12/12*font_base,
-        "axes.labelsize": 11/12*font_base,
-        "axes.titlesize": 12/12*font_base,
-        "xtick.labelsize": 10/12*font_base,
-        "ytick.labelsize": 10/12*font_base,
-        "legend.fontsize": 16/12*font_base,
-
-        "grid.linewidth": 1,
-        "lines.linewidth": 1.75,
-        "patch.linewidth": .3,
-        "lines.markersize": 7,
-        "lines.markeredgewidth": 0,
-
-        "xtick.major.width": 1,
-        "ytick.major.width": 1,
-        "xtick.minor.width": .5,
-        "ytick.minor.width": .5,
-
-        "xtick.major.pad": 7,
-        "ytick.major.pad": 7,
-    }
-
-    context_dict = {k: v * scaling for k, v in base_context.items()}
-    base_context["figure.figsize"] = [8*scaling, 5.5*scaling]
-
-    matplotlib.rcParams.update(context_dict)
+# Does a bunch of styling stuff that needs to be done manually instead of in the
+# rcparams
+def style_axis(show_xaxis=False):
+    plt.gca().xaxis.grid(show_xaxis)
+    plt.gca().title.set_position([-0.04, 1.1])
+    plt.gca().title.set_fontweight("bold")
+    plt.gca().title.set_ha("left")
+    plt.gca().xaxis.label.set_fontweight('medium')
+    plt.gca().xaxis.label.set_fontstyle('italic')
+    plt.gca().yaxis.set_label_coords(-0.04,1.01)
+    plt.gca().yaxis.label.set_fontweight('medium')
+    plt.gca().yaxis.label.set_fontstyle('italic')
+    plt.gca().yaxis.label.set_ha('left')
+    plt.gca().yaxis.label.set_rotation(0)

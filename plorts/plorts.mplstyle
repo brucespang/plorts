@@ -1,0 +1,43 @@
+# solarized
+#axes.prop_cycle    : cycler('color', ["6c71c4", "268bd2", "2aa198", "859900", "b58900", "cb4b16", "dc322f", "d33682"])
+
+# from https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283
+# cool
+#axes.prop_cycle: cycler('color', ["DCECC9", "AADACC", "78C6D0", "48B3D3", "3E94C0", "3474AC", "2A5599", "203686", "18216B", "11174B"])
+# warm
+#axes.prop_cycle: cycler('color', ["FDED86", "FCE36B", "F7C65C", "F1A84F", "EC8C41", "E76F33", "E25226", "B04728", "7E3E2B", "4C3430"])
+# neon
+axes.prop_cycle: cycler('color', ["F9CDAC", "F2A49F", "EC7C92", "E65586", "BC438B", "933291", "692398", "551C7B", "41155E", "2D0F41"])
+
+
+figure.facecolor: white
+
+text.color: 000000
+legend.fancybox: true
+legend.frameon: true
+legend.numpoints: 1
+legend.scatterpoints: 1
+xtick.direction: out
+ytick.direction: out
+xtick.color: .15
+ytick.color: .15
+image.cmap: Greys
+
+font.sans-serif: Lato
+font.family: Lato
+font.weight: normal
+
+lines.solid_capstyle: round
+axes.grid: True
+axes.facecolor: white
+axes.edgecolor: .8
+axes.axisbelow: True
+axes.labelcolor: .15
+axes.labelsize: large
+axes.linewidth: 0
+axes.titlesize: x-large
+
+xtick.major.size: 0
+ytick.major.size: 0
+xtick.minor.size: 0
+ytick.minor.size: 0
