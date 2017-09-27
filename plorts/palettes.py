@@ -16,6 +16,7 @@ colorblind = ["#0072B2", "#009E73", "#D55E00",
 solarized = ["#6c71c4", "#268bd2", "#2aa198", "#859900",
              "#b58900", "#cb4b16", "#dc322f", "#d33682"]
 
+# https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283
 cool = gradient_to_colormap("cool",[(0, "white"), (0.25, "#DCEDC8"), (0.45, "#42B3D5"), (0.75, "#1a237e"), (1, "black")])
 
 warm = gradient_to_colormap("warm", [(0, "white"), (0.3, "#feeb65"), (0.65, "#e4521b"), (0.85, "#4d342f"), (1, "black")])
