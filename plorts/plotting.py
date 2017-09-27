@@ -63,7 +63,7 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
 def scatter(data, x, y, hue=None, markers=[None], cmap=palettes.neon):
     return plot(data=data,x=x,y=y, hue=hue,markers=['o'], linestyles=[''],cmap=cmap)
 
-def savefig(filename):
+def savefig(filename, **kwargs):
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
@@ -71,4 +71,5 @@ def savefig(filename):
             if exc.errno != errno.EEXIST:
                 raise
 
-    plt.savefig(filename, tight_layout=True)
+    plt.tight_layout(pad=0)
+    plt.savefig(filename, **kwargs)

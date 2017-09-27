@@ -11,6 +11,7 @@ axes.prop_cycle: cycler('color', ["F9CDAC", "F2A49F", "EC7C92", "E65586", "BC438
 
 
 figure.facecolor: white
+figure.dpi: 300
 
 text.color: 000000
 legend.fancybox: true
