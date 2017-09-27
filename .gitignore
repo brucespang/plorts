@@ -2,3 +2,8 @@
 dist/
 plorts.egg-info/
 build/
+sample.pdf
+sample.aux
+sample.log
+auto/
+.ipynb_checkpoints/
