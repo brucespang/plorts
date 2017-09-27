@@ -35,14 +35,25 @@ import matplotlib.pyplot as plt
 # Does a bunch of styling stuff that needs to be done manually instead of in the
 # rcparams
 def style_axis(show_xaxis=False):
-    plt.gca().xaxis.grid(show_xaxis)
-    plt.gca().title.set_position([-0.04, 1.1])
-    plt.gca().title.set_fontweight("bold")
-    plt.gca().title.set_ha("left")
-    plt.gca().xaxis.label.set_fontweight('medium')
-    plt.gca().xaxis.label.set_fontstyle('italic')
-    plt.gca().yaxis.set_label_coords(-0.04,1.01)
-    plt.gca().yaxis.label.set_fontweight('medium')
-    plt.gca().yaxis.label.set_fontstyle('italic')
-    plt.gca().yaxis.label.set_ha('left')
-    plt.gca().yaxis.label.set_rotation(0)
+    ax = plt.gca()
+
+    ax.xaxis.grid(show_xaxis)
+    ax.title.set_position([-0.04, 1.1])
+    ax.title.set_fontweight("bold")
+    ax.title.set_ha("left")
+    ax.xaxis.label.set_fontweight('medium')
+    ax.xaxis.label.set_fontstyle('italic')
+
+    left_in_axis = [0, 1]
+    left_in_display = ax.transAxes.transform(left_in_axis)
+    left_label_in_display = [left_in_display[0] - ax.yaxis.get_tick_space() * ax.figure.dpi/72.,
+                             left_in_display[1] + ax.xaxis.get_tick_space() * ax.figure.dpi/72.]
+    left_label_in_axis = ax.transAxes.inverted().transform(left_label_in_display)
+
+    ax.yaxis.set_label_coords(*left_label_in_axis)
+
+    ax.yaxis.label.set_fontweight('medium')
+    ax.yaxis.label.set_fontstyle('italic')
+    ax.yaxis.label.set_ha('right')
+    ax.yaxis.label.set_rotation(0)
+    plt.tight_layout()
