@@ -3,6 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import palettes
+import errno
 
 def colors_from_hue(data, hue, cmap):
     num_colors = len(data.groupby(hue))
@@ -11,13 +12,19 @@ def colors_from_hue(data, hue, cmap):
     return [ cmap(v) for v in cm_subsection ]
 
 
-def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cmap=palettes.neon):
+# XXX: this method is a disaster
+def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cmap=palettes.neon, label_lines=True):
     data = data.sort_values(x, ascending=True)
+
     if hue:
         if cmap is not None:
             colors = colors_from_hue(data, hue, cmap)
 
         for i,(key,grp) in enumerate(data.groupby(hue)):
+            if label_lines:
+                label = key
+            else:
+                label = ""
             marker = markers[i % len(markers)]
             linestyle = linestyles[i % len(linestyles)]
             if cmap is not None:
@@ -25,15 +32,15 @@ def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cma
             else:
                 color = None
             if error is not None:
-                plt.errorbar(grp[x], grp[y], yerr=grp[error], label=key, marker=marker, linestyle=linestyle, color=color)
+                plt.errorbar(list(grp[x]), list(grp[y]), yerr=grp[error], color=color, marker=marker, linestyle=linestyle, label=label)
             else:
-                plt.plot(grp[x], grp[y], label=key, marker=marker, linestyle=linestyle, color=color)
+                plt.plot(list(grp[x]), list(grp[y]), label=label, color=color, marker=marker, linestyle=linestyle)
     else:
         color = cmap(0.5)
         if error is not None:
-            plt.errorbar(data[x], data[y], yerr=data[error], color=color)
+            plt.errorbar(list(data[x]), list(data[y]), yerr=data[error], color=color, marker=markers[0], linestyle=linestyles[0])
         else:
-            plt.plot(data[x], data[y], color=color)
+            plt.plot(list(data[x]), list(data[y]), color=color, marker=markers[0], linestyle=linestyles[0])
 
     plt.ylabel(y)
     plt.xlabel(x)
@@ -75,8 +82,8 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
     plt.gca().autoscale(tight=True)
     plt.gca().margins(y=0.1)
 
-def scatter(data, x, y, hue=None, cmap=palettes.neon):
-    return plot(data=data,x=x,y=y, hue=hue,markers=['o'], linestyles=[''],cmap=cmap)
+def scatter(data, x, y, hue=None, cmap=palettes.neon, markers=['o'], **kwargs):
+    return plot(data=data,x=x,y=y, hue=hue,markers=markers, linestyles=[''],cmap=cmap, **kwargs)
 
 def hist(x, cmap=palettes.neon, **kwargs):
     if 'color' not in kwargs:

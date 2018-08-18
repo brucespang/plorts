@@ -18,20 +18,14 @@ def legend(*args, **kwargs):
 def legend_end(*args, **kwargs):
     lines = plt.gca().get_lines()
 
-    ax = lines[0].get_axes()
-    labLines = []
-    labels = []
-
-    #Take only the lines which have labels other than the default ones
     for line in lines:
         label = line.get_label()
-        if "_line" not in label:
-            labLines.append(line)
-            labels.append(label)
-
-    for line,label in zip(labLines,labels):
+        #Take only the lines which have labels other than the default ones
+        if "_line" in label:
+            continue
         x = line.get_xdata()[-1] + 0.05
-        y = line.get_ydata()[-1] - 0.2
+        y = line.get_ydata()[-1]
+        ax = line.axes
         ax.text(x,y,label,
                 color=line.get_color(),
                 bbox=dict(facecolor=ax.get_facecolor(),
@@ -43,7 +37,7 @@ def legend_end(*args, **kwargs):
 def legend_inline(xvals=None,xoffset=None,**kwargs):
     lines = plt.gca().get_lines()
 
-    ax = lines[0].get_axes()
+    ax = lines[0].axes
     labLines = []
     labels = []
 
@@ -66,7 +60,7 @@ def legend_inline(xvals=None,xoffset=None,**kwargs):
 
 #Label line with line2D label data
 def label_line(line,x,label=None,**kwargs):
-    ax = line.get_axes()
+    ax = line.axes
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 

@@ -7,7 +7,7 @@
 # warm
 #axes.prop_cycle: cycler('color', ["FDED86", "FCE36B", "F7C65C", "F1A84F", "EC8C41", "E76F33", "E25226", "B04728", "7E3E2B", "4C3430"])
 # neon
-axes.prop_cycle: cycler('color', ["F9CDAC", "F2A49F", "EC7C92", "E65586", "BC438B", "933291", "692398", "551C7B", "41155E", "2D0F41"])
+axes.prop_cycle: cycler('color', ["E65586", "BC438B", "933291", "692398", "551C7B", "41155E", "2D0F41", "F9CDAC", "F2A49F", "EC7C92"])
 
 
 figure.facecolor: white
