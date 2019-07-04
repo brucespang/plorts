@@ -9,6 +9,7 @@ Welcome to plorts's documentation!
 .. automodule:: plorts
    :members:
    :undoc-members:
+   :special-members:
 
 .. toctree::
    :maxdepth: 2

@@ -85,19 +85,58 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
 def scatter(data, x, y, hue=None, cmap=palettes.neon, markers=['o'], **kwargs):
     return plot(data=data,x=x,y=y, hue=hue,markers=markers, linestyles=[''],cmap=cmap, **kwargs)
 
-def hist(x, cmap=palettes.neon, **kwargs):
+def hist(data, x, hue=None, cmap=palettes.neon, **kwargs):
     """
-    Plot a histogram
+    Plot a histogram from a dataframe column.
+
+    If hue is provided, plot many overlayed histograms, one per value of the data[hue] column.
 
     Parameters
     ----------
-    x
-      list of data to plot
+
+      data: pandas.DataFrame
+        dataframe to plot
+
+      x: string
+        column of data to plot
+
+    Keyword Arguments
+    -----------------
+
+      hue: string
+        column of dataframe to split on
+
+      cmap
+        colormap to use
+
+      alpha: float
+        opacity of histogram
     """
-    if 'color' not in kwargs:
-        kwargs['color'] = cmap(0.5)
     if 'rwidth' not in kwargs:
         kwargs['rwidth'] = 0.92
+
+    colors = colors_from_hue(data, hue, cmap)
+
+    if hue:
+        if 'alpha' not in kwargs:
+            kwargs['alpha'] = 0.5
+
+        for i,(k,grp) in enumerate(data.groupby(hue)):
+            if cmap:
+                color = colors[i]
+            else:
+                color = None
+            print(color)
+
+            plt.hist(grp[x], label=k, color=color, **kwargs)
+    else:
+        if 'color' not in kwargs:
+            kwargs['color'] = cmap(0.5)
+
+        plt.hist(data[x], **kwargs)
+
+
+
     plt.hist(x, **kwargs)
 
 def cdf(data, *args, **kwargs):
