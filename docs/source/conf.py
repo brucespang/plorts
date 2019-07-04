@@ -22,7 +22,8 @@ copyright = '2019, Bruce Spang'
 author = 'Bruce Spang'
 
 # The full version, including alpha/beta/rc tags
-release = open(os.path.join(os.path.abspath(__file__), '../../VERSION')).read().strip()
+release = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                            '../../VERSION')).read().strip()
 
 
 # -- General configuration ---------------------------------------------------
