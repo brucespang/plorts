@@ -1,11 +1,15 @@
 all: build upload
 
+.PHONY: test
+test:
+	cd docs/ && make doctest
+
 .PHOHNY: clean
 clean:
 	rm -rf dist
 
 .PHONY: build
-build: clean
+build: clean test
 	python setup.py sdist
 	python setup.py bdist_wheel
 
