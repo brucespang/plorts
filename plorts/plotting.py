@@ -86,12 +86,25 @@ def scatter(data, x, y, hue=None, cmap=palettes.neon, markers=['o'], **kwargs):
     return plot(data=data,x=x,y=y, hue=hue,markers=markers, linestyles=[''],cmap=cmap, **kwargs)
 
 def hist(x, cmap=palettes.neon, **kwargs):
+    """
+    Plot a histogram
+
+    Parameters
+    ----------
+    x
+      list of data to plot
+    """
     if 'color' not in kwargs:
         kwargs['color'] = cmap(0.5)
     if 'rwidth' not in kwargs:
         kwargs['rwidth'] = 0.92
     plt.hist(x, **kwargs)
 
+def cdf(data, *args, **kwargs):
+    sorted_data = np.sort(data)
+    sorted_data_cdf = np.arange(len(sorted_data))/float(len(sorted_data)) * 100 
+    plt.plot(sorted_data, sorted_data_cdf, *args, **kwargs)
+    
 def savefig(filename, **kwargs):
     if not os.path.exists(os.path.dirname(filename)):
         try:
