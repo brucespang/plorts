@@ -1,6 +1,44 @@
+"""
+Styles for plots.
+
+Mainly adds the cool, warn, and neon themes from `this post <https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283>`_
+
+.. testsetup:: *
+
+   import plorts
+
+"""
+
 import matplotlib
 
 def gradient_to_colormap(name, gradient):
+    """
+    Generates a matplotlib colormap from a gradient. 
+
+    Plain white to black gradient
+
+    >>> plorts.palettes.gradient_to_colormap('bw', [(0, "white"), (1, "black")])
+    <matplotlib.colors.LinearSegmentedColormap object at ...>
+
+    First 25% of gradient is white to blue, second 75% is blue to black
+
+    >>> plorts.palettes.gradient_to_colormap('bw', [(0, "white"), (0.25, "#0000ff"), (1, "black")])
+    <matplotlib.colors.LinearSegmentedColormap object at ...>
+    
+    Parameters
+    ----------
+
+      name
+        name of the colormap to register with matplotlib
+
+      gradient
+        list of tuples specifying gradient
+
+    Returns
+    -------
+    
+      matplotlib.colors.LinearSegmentedColormap
+    """
     gradient = [(pos,matplotlib.colors.to_rgb(name)) for pos,name in gradient]
     cmap = {"red":[], "green":[], "blue":[]}
     for pos,(r,g,b) in gradient:
@@ -10,9 +48,10 @@ def gradient_to_colormap(name, gradient):
     return matplotlib.colors.LinearSegmentedColormap(name, cmap)
 
 
+#: colorblind-friendly colors for use in axes.prop_cycle
 colorblind = ["#0072B2", "#009E73", "#D55E00",
               "#CC79A7", "#F0E442", "#56B4E9"]
-
+#: solarized colorsheme for axes.prop_cycle
 solarized = ["#6c71c4", "#268bd2", "#2aa198", "#859900",
              "#b58900", "#cb4b16", "#dc322f", "#d33682"]
 
