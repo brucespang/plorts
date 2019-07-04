@@ -2,9 +2,9 @@
    sphinx-quickstart on Thu Jul  4 11:15:06 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
-
-Welcome to plorts's documentation!
-==================================
+ 
+plorts
+======
 
 .. automodule:: plorts
    :members:
@@ -15,7 +15,12 @@ Welcome to plorts's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+.. plot:: ../../examples/line.py
+.. plot:: ../../examples/scatter.py
+.. plot:: ../../examples/stackplot.py
+.. plot:: ../../examples/boxplot.py
+.. plot:: ../../examples/histogram.py
+  
 
 Indices and tables
 ==================
