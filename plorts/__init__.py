@@ -1,9 +1,9 @@
 from __future__ import division
 
-import palettes
-from style import *
-from plotting import *
-from legend import *
+from . import palettes
+from .style import *
+from .plotting import *
+from .legend import *
 
 import matplotlib as mpl
 import os

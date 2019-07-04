@@ -2,7 +2,7 @@ import os
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import palettes
+from . import palettes
 import errno
 
 def colors_from_hue(data, hue, cmap):
