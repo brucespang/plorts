@@ -3,6 +3,18 @@ from math import atan2,degrees
 import numpy as np
 
 def legend(*args, **kwargs):
+    """
+    plt.legend with a few extra location options:
+
+    * inline: place legends on top of line
+    * end: place legend at the right end of line
+
+    Parameters
+    ----------
+
+      loc: string or int
+        location to place the legend
+    """
     if 'loc' in kwargs:
         if kwargs['loc'] == 'inline':
             del kwargs['loc']
