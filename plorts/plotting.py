@@ -115,9 +115,9 @@ def hist(data, x, hue=None, cmap=palettes.neon, **kwargs):
     if 'rwidth' not in kwargs:
         kwargs['rwidth'] = 0.92
 
-    colors = colors_from_hue(data, hue, cmap)
-
     if hue:
+        colors = colors_from_hue(data, hue, cmap)
+        
         if 'alpha' not in kwargs:
             kwargs['alpha'] = 0.5
 
