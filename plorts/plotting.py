@@ -126,18 +126,13 @@ def hist(data, x, hue=None, cmap=palettes.neon, **kwargs):
                 color = colors[i]
             else:
                 color = None
-            print(color)
-
+     
             plt.hist(grp[x], label=k, color=color, **kwargs)
     else:
         if 'color' not in kwargs:
             kwargs['color'] = cmap(0.5)
 
         plt.hist(data[x], **kwargs)
-
-
-
-    plt.hist(x, **kwargs)
 
 def cdf(data, *args, **kwargs):
     sorted_data = np.sort(data)
