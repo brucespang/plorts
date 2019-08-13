@@ -10,8 +10,8 @@ clean:
 
 .PHONY: build
 build: clean test
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
 
 .PHONY: upload
 upload: build
