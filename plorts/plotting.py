@@ -13,7 +13,7 @@ def colors_from_hue(data, hue, cmap):
 
 
 # XXX: this method is a disaster
-def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cmap=palettes.neon, label_lines=True):
+def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cmap=palettes.neon, label_lines=True, **kwargs):
     data = data.sort_values(x, ascending=True)
 
     if hue:
@@ -32,15 +32,15 @@ def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cma
             else:
                 color = None
             if error is not None:
-                plt.errorbar(list(grp[x]), list(grp[y]), yerr=grp[error], color=color, marker=marker, linestyle=linestyle, label=label)
+                plt.errorbar(list(grp[x]), list(grp[y]), yerr=grp[error], color=color, marker=marker, linestyle=linestyle, label=label, **kwargs)
             else:
-                plt.plot(list(grp[x]), list(grp[y]), label=label, color=color, marker=marker, linestyle=linestyle)
+                plt.plot(list(grp[x]), list(grp[y]), label=label, color=color, marker=marker, linestyle=linestyle, **kwargs)
     else:
         color = cmap(0.5)
         if error is not None:
-            plt.errorbar(list(data[x]), list(data[y]), yerr=data[error], color=color, marker=markers[0], linestyle=linestyles[0])
+            plt.errorbar(list(data[x]), list(data[y]), yerr=data[error], color=color, marker=markers[0], linestyle=linestyles[0], **kwargs)
         else:
-            plt.plot(list(data[x]), list(data[y]), color=color, marker=markers[0], linestyle=linestyles[0])
+            plt.plot(list(data[x]), list(data[y]), color=color, marker=markers[0], linestyle=linestyles[0], **kwargs)
 
     plt.ylabel(y)
     plt.xlabel(x)
