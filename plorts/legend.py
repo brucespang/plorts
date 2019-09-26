@@ -8,7 +8,8 @@ def legend(*args, **kwargs):
 
     * inline: place legends on top of line
     * end: place legend at the right end of line
-
+    * max: place legend slightly up and right of the max value of each line
+    
     Parameters
     ----------
 
@@ -22,12 +23,15 @@ def legend(*args, **kwargs):
         elif kwargs['loc'] == 'end':
             del kwargs['loc']
             legend_end(*args, **kwargs)
+        elif kwargs['loc'] == 'max':
+            del kwargs['loc']
+            legend_max(*args, **kwargs)
         else:
             plt.legend(*args, **kwargs)
     else:
         plt.legend(*args, **kwargs)
 
-def legend_end(*args, **kwargs):
+def legend_end(xoff=0.05, yoff=0, *args, **kwargs):
     lines = plt.gca().get_lines()
 
     for line in lines:
@@ -35,8 +39,8 @@ def legend_end(*args, **kwargs):
         #Take only the lines which have labels other than the default ones
         if "_line" in label:
             continue
-        x = line.get_xdata()[-1] + 0.05
-        y = line.get_ydata()[-1]
+        x = line.get_xdata()[-1] + xoff
+        y = line.get_ydata()[-1] + yoff
         ax = line.axes
         ax.text(x,y,label,
                 color=line.get_color(),
@@ -46,6 +50,28 @@ def legend_end(*args, **kwargs):
                           pad=2),
                 **kwargs)
 
+def legend_max(xoff=0.05, yoff=0.01, *args, **kwargs):
+    lines = plt.gca().get_lines()
+
+    for line in lines:
+        label = line.get_label()
+        #Take only the lines which have labels other than the default ones
+        if "_line" in label:
+            continue
+
+        max_idx = np.argmax(line.get_ydata())
+        x = line.get_xdata()[max_idx] + xoff
+        y = line.get_ydata()[max_idx] + yoff
+        
+        ax = line.axes
+        ax.text(x,y,label,
+                color=line.get_color(),
+                bbox=dict(facecolor=ax.get_facecolor(),
+                          edgecolor=ax.get_facecolor(),
+                          x=x, y=y,
+                          pad=2),
+                **kwargs)
+        
 def legend_inline(xvals=None,xoffset=None,**kwargs):
     lines = plt.gca().get_lines()
 
