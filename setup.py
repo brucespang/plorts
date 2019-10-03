@@ -79,4 +79,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=['matplotlib','numpy'],
+
+    # include matplotlib style files
+    include_package_data=True,
 )
