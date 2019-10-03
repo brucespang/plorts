@@ -140,6 +140,7 @@ def cdf(data, *args, **kwargs):
     plt.plot(sorted_data, sorted_data_cdf, *args, **kwargs)
     
 def savefig(filename, **kwargs):
+    """Saves a figure, but also creates the directory and calls tight_layout before saving"""
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
