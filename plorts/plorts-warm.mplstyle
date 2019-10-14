@@ -1,0 +1,3 @@
+# from https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283
+# warm
+axes.prop_cycle: cycler('color', ["FDED86", "FCE36B", "F7C65C", "F1A84F", "EC8C41", "E76F33", "E25226", "B04728", "7E3E2B", "4C3430"])

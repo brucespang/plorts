@@ -148,5 +148,10 @@ def savefig(filename, **kwargs):
             if exc.errno != errno.EEXIST:
                 raise
 
+    if 'bbox_inches' not in kwargs:
+        kwargs['bbox_inches'] = 'tight'
+    if 'pad_inches' not in kwargs:
+        kwargs['pad_inches'] = 0
+            
     plt.tight_layout(pad=0)
     plt.savefig(filename, **kwargs)

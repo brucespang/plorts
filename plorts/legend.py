@@ -66,10 +66,6 @@ def legend_max(xoff=0.05, yoff=0.01, *args, **kwargs):
         ax = line.axes
         ax.text(x,y,label,
                 color=line.get_color(),
-                bbox=dict(facecolor=ax.get_facecolor(),
-                          edgecolor=ax.get_facecolor(),
-                          x=x, y=y,
-                          pad=2),
                 **kwargs)
         
 def legend_inline(xvals=None,xoffset=None,**kwargs):
