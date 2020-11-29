@@ -11,36 +11,73 @@ def colors_from_hue(data, hue, cmap):
     cm_subsection = cm_subsection[1:num_colors+1]
     return [ cmap(v) for v in cm_subsection ]
 
+def hueize(data, hue=None, cmap=palettes.neon, *args, **kwargs):
+    """
+    Groups a dataframe by hues, if any, and generates plot settings for each hue.
 
-# XXX: this method is a disaster
-def plot(data, x, y, error=None, hue=None, markers=[None], linestyles=['-'], cmap=palettes.neon, label_lines=True, **kwargs):
+    Returns
+    -------
+      Generator of (pd.DataFrame, kwargs), where the kwargs can be used in matplotlib functions.
+    
+    Parameters
+    ----------
+
+      data: pandas.DataFrame
+        dataframe to plot
+
+      x: string
+        column of data to plot
+
+    Keyword Arguments
+    -----------------
+
+      hue: string
+        column of dataframe to split on
+    """        
+    if hue is None:
+        new_kwargs = kwargs.copy()
+        new_kwargs.update({'color': kwargs.get('color', cmap(0.5))})
+        yield (data, new_kwargs)
+    else:
+        if cmap:
+            colors = colors_from_hue(data, hue, cmap)
+        elif 'colors' in kwargs:
+            colors = kwargs['colors']
+            del kwargs['colors']
+        else:
+            colors = [kwargs.get('color')]
+        
+        for i,(label,grp) in enumerate(data.groupby(hue)):
+            new_kwargs = kwargs.copy()
+
+            # matplotlib doesn't like it when we have these in its kwargs.
+            new_kwargs.pop('markers', None)
+            new_kwargs.pop('linestyles', None)
+            
+            if 'markers' in kwargs:
+                markers = kwargs['markers']
+                new_kwargs['marker'] = markers[i % len(markers)]
+
+            if 'linestyles' in kwargs:
+                linestyles = kwargs['linestyles']
+                new_kwargs['linestyle'] = linestyles[i % len(linestyles)]
+
+            new_kwargs.update({
+                'label': label,
+                'color': colors[i % len(colors)],
+            })
+            
+            yield (grp, new_kwargs)
+
+
+def plot(data, x, y, error=None, *args, **kwargs):
     data = data.sort_values(x, ascending=True)
 
-    if hue:
-        if cmap is not None:
-            colors = colors_from_hue(data, hue, cmap)
-
-        for i,(key,grp) in enumerate(data.groupby(hue)):
-            if label_lines:
-                label = key
-            else:
-                label = ""
-            marker = markers[i % len(markers)]
-            linestyle = linestyles[i % len(linestyles)]
-            if cmap is not None:
-                color = colors[i]
-            else:
-                color = None
-            if error is not None:
-                plt.errorbar(list(grp[x]), list(grp[y]), yerr=grp[error], color=color, marker=marker, linestyle=linestyle, label=label, **kwargs)
-            else:
-                plt.plot(list(grp[x]), list(grp[y]), label=label, color=color, marker=marker, linestyle=linestyle, **kwargs)
-    else:
-        color = cmap(0.5)
+    for df,kwargs in hueize(data, *args, **kwargs):
         if error is not None:
-            plt.errorbar(list(data[x]), list(data[y]), yerr=data[error], color=color, marker=markers[0], linestyle=linestyles[0], **kwargs)
+            plt.errorbar(list(df[x]), list(df[y]), yerr=df[error], **kwargs)
         else:
-            plt.plot(list(data[x]), list(data[y]), color=color, marker=markers[0], linestyle=linestyles[0], **kwargs)
+            plt.plot(list(df[x]), list(df[y]), **kwargs)
 
     plt.ylabel(y)
     plt.xlabel(x)
@@ -51,9 +88,9 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
     xs = np.array(data[x])
     yss = []
     labels = []
-    for k,grp in data.groupby(hue):
+    for k,df in data.groupby(hue):
         labels.append(k)
-        grp_xs = grp[x].tolist()
+        df_xs = grp[x].tolist()
         grp_ys = grp[y].tolist()
         ys = []
         for v in xs:
@@ -82,10 +119,10 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
     plt.gca().autoscale(tight=True)
     plt.gca().margins(y=0.1)
 
-def scatter(data, x, y, hue=None, cmap=palettes.neon, markers=['o'], **kwargs):
-    return plot(data=data,x=x,y=y, hue=hue,markers=markers, linestyles=[''],cmap=cmap, **kwargs)
+def scatter(data, x, y, markers=['o'], linestyles=[''], **kwargs):
+    return plot(data=data, x=x, y=y, markers=markers, linestyles=linestyles, **kwargs)
 
-def hist(data, x, hue=None, cmap=palettes.neon, **kwargs):
+def hist(data, x, alpha=0.5, rwidth=0.92, *args, **kwargs):
     """
     Plot a histogram from a dataframe column.
 
@@ -106,38 +143,81 @@ def hist(data, x, hue=None, cmap=palettes.neon, **kwargs):
       hue: string
         column of dataframe to split on
 
-      cmap
-        colormap to use
-
       alpha: float
-        opacity of histogram
+        opacity of histogram (default: 0.5)
+
+      rwidth: float
+        The relative width of the bars as a fraction of the bin width (default: 0.92)
     """
-    if 'rwidth' not in kwargs:
-        kwargs['rwidth'] = 0.92
-
-    if hue:
-        colors = colors_from_hue(data, hue, cmap)
+    new_kwargs = dict(alpha=alpha, rwidth=rwidth)
+    new_kwargs.update(kwargs)
+    for df,kwargs in hueize(data, *args, **new_kwargs):
+        plt.hist(df[x], **kwargs)
+    plt.xlabel(x)
+    plt.ylabel("Frequency")
         
-        if 'alpha' not in kwargs:
-            kwargs['alpha'] = 0.5
+def cdf(data, x, *args, **kwargs):
+    """
+    Plot a cdf from a dataframe column.
 
-        for i,(k,grp) in enumerate(data.groupby(hue)):
-            if cmap:
-                color = colors[i]
-            else:
-                color = None
-     
-            plt.hist(grp[x], label=k, color=color, **kwargs)
-    else:
-        if 'color' not in kwargs:
-            kwargs['color'] = cmap(0.5)
+    If hue is provided, plot many overlayed cdfs, one per value of the data[hue] column.
 
-        plt.hist(data[x], **kwargs)
+    Parameters
+    ----------
 
-def cdf(data, *args, **kwargs):
-    sorted_data = np.sort(data)
-    sorted_data_cdf = np.arange(len(sorted_data))/float(len(sorted_data)) * 100 
-    plt.plot(sorted_data, sorted_data_cdf, *args, **kwargs)
+      data: pandas.DataFrame
+        dataframe to plot
+
+      x: string
+        column of data to plot
+
+    Keyword Arguments
+    -----------------
+
+      hue: string
+        column of dataframe to split on
+    """    
+    for df,kwargs in hueize(data, *args, **kwargs):
+        sorted_data = np.sort(df[x])
+        sorted_data_cdf = np.arange(len(sorted_data))/float(len(sorted_data)) * 100 
+        plt.plot(sorted_data, sorted_data_cdf, *args, **kwargs)
+    plt.ylabel("Cumulative % Data")
+    plt.xlabel(x)
+    
+def pdf(data, x, bins=10, normalize=True, *args, **kwargs):
+    """
+    Plot a probability density function (pdf) from a dataframe column.
+
+    If hue is provided, plot many overlayed pdf, one per value of the data[hue] column.
+
+    Parameters
+    ----------
+
+      data: pandas.DataFrame
+        dataframe to plot
+
+      x: string
+        column of data to plot
+
+    Keyword Arguments
+    -----------------
+
+      hue: string
+        column of dataframe to split on
+
+      bins: int or sequence of scalars or str, optional
+        Bins to use for the function. See `numpy.histogram <https://numpy.org/doc/stable/reference/generated/numpy.histogram.html>`
+
+      normalize: boolean
+        Normalize to a probability density (default). If false, returns a histogram.
+    """    
+    for df,kwargs in hueize(data, *args, **kwargs):
+        ys,xs = np.histogram(df[x], bins=bins)
+        if normalize:
+            ys = np.array(ys)/sum(ys)*100
+        plt.plot(xs[:-1], ys, *args, **kwargs)
+    plt.ylabel("% Data")
+    plt.xlabel(x)
     
 def savefig(filename, **kwargs):
     """Saves a figure, but also creates the directory and calls tight_layout before saving"""
