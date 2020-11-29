@@ -1,5 +1,8 @@
 # Plorts - Niceish python plots
 
+[![Documentation Status](https://readthedocs.org/projects/plorts/badge/?version=latest)](https://plorts.readthedocs.io/en/latest/?badge=latest)
+
+
 Like seaborn but with less stuff and also it starts faster
 
 ```
