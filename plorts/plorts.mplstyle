@@ -25,6 +25,7 @@ axes.labelcolor: .15
 axes.labelsize: large
 axes.linewidth: 0
 axes.titlesize: x-large
+axes.titley: 1.0
 
 xtick.major.size: 0
 ytick.major.size: 0
