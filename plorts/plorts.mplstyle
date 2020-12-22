@@ -1,5 +1,4 @@
 figure.facecolor: white
-figure.dpi: 300
 
 text.color: 000000
 legend.fancybox: true
