@@ -6,6 +6,9 @@ from . import palettes
 import errno
 
 def colors_from_hue(data, hue, cmap):
+    if hue is None:
+        return [cmap(0.5)]
+    
     num_colors = len(data.groupby(hue))
     cm_subsection = np.linspace(0.2, 0.8, num_colors+2)
     cm_subsection = cm_subsection[1:num_colors+1]
@@ -34,40 +37,40 @@ def hueize(data, hue=None, cmap=palettes.neon, *args, **kwargs):
       hue: string
         column of dataframe to split on
     """        
-    if hue is None:
-        new_kwargs = kwargs.copy()
-        new_kwargs.update({'color': kwargs.get('color', cmap(0.5))})
-        yield (data, new_kwargs)
+    if 'colors' in kwargs:
+        colors = kwargs['colors']
+        del kwargs['colors']
+    elif 'color' in kwargs:
+        colors = [kwargs.get('color')]
     else:
-        if cmap:
-            colors = colors_from_hue(data, hue, cmap)
-        elif 'colors' in kwargs:
-            colors = kwargs['colors']
-            del kwargs['colors']
-        else:
-            colors = [kwargs.get('color')]
+        colors = colors_from_hue(data, hue, cmap)
+
+    if hue is None:
+        hues = [(None, data)]
+    else:
+        hues = data.groupby(hue)
         
-        for i,(label,grp) in enumerate(data.groupby(hue)):
-            new_kwargs = kwargs.copy()
+    for i,(label,grp) in enumerate(hues):
+        new_kwargs = kwargs.copy()
 
-            # matplotlib doesn't like it when we have these in its kwargs.
-            new_kwargs.pop('markers', None)
-            new_kwargs.pop('linestyles', None)
+        # matplotlib doesn't like it when we have these in its kwargs.
+        new_kwargs.pop('markers', None)
+        new_kwargs.pop('linestyles', None)
             
-            if 'markers' in kwargs:
-                markers = kwargs['markers']
-                new_kwargs['marker'] = markers[i % len(markers)]
+        if 'markers' in kwargs:
+            markers = kwargs['markers']
+            new_kwargs['marker'] = markers[i % len(markers)]
 
-            if 'linestyles' in kwargs:
-                linestyles = kwargs['linestyles']
-                new_kwargs['linestyle'] = linestyles[i % len(linestyles)]
+        if 'linestyles' in kwargs:
+            linestyles = kwargs['linestyles']
+            new_kwargs['linestyle'] = linestyles[i % len(linestyles)]
 
-            new_kwargs.update({
-                'label': label,
-                'color': colors[i % len(colors)],
-            })
+        new_kwargs.update({
+            'label': label,
+            'color': colors[i % len(colors)],
+        })
             
-            yield (grp, new_kwargs)
+        yield (grp, new_kwargs)
 
 
 def plot(data, x, y, error=None, *args, **kwargs):
@@ -88,9 +91,9 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
     xs = np.array(data[x])
     yss = []
     labels = []
-    for k,df in data.groupby(hue):
+    for k,grp in data.groupby(hue):
         labels.append(k)
-        df_xs = grp[x].tolist()
+        grp_xs = grp[x].tolist()
         grp_ys = grp[y].tolist()
         ys = []
         for v in xs:
