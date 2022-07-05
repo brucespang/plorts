@@ -34,7 +34,7 @@ import matplotlib.pyplot as plt
 
 # Does a bunch of styling stuff that needs to be done manually instead of in the
 # rcparams
-def style_axis(show_xaxis=False, label_fontweight='medium', label_fontstyle='italic'):
+def style_axis(show_xaxis=False, label_fontweight='medium', label_fontstyle='italic', tight_layout=True):
     ax = plt.gca()
 
     ax.xaxis.grid(show_xaxis)    
@@ -63,5 +63,6 @@ def style_axis(show_xaxis=False, label_fontweight='medium', label_fontstyle='ita
     ax.title.set_fontweight("bold")
     ax.title.set_ha("left")
     ax.title.set_ha("left")
-    
-    plt.tight_layout()
+
+    if tight_layout:
+        plt.tight_layout()

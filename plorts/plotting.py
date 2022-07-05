@@ -6,6 +6,8 @@ from . import palettes
 import errno
 
 def colors_from_hue(data, hue, cmap):
+    # TODO: add a version of this that takes a number of arguments
+    # Alternatively, figure out how to do the C0, C1, ... business
     if hue is None:
         return [cmap(0.5)]
     
@@ -65,6 +67,10 @@ def hueize(data, hue=None, cmap=palettes.neon, *args, **kwargs):
             linestyles = kwargs['linestyles']
             new_kwargs['linestyle'] = linestyles[i % len(linestyles)]
 
+        if 'labels' in kwargs:
+            # XXX: TODO
+            pass
+            
         new_kwargs.update({
             'label': label,
             'color': colors[i % len(colors)],
