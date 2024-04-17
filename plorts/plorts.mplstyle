@@ -11,8 +11,6 @@ xtick.color: .15
 ytick.color: .15
 image.cmap: Greys
 
-font.sans-serif: Lato
-font.family: Lato
 font.weight: normal
 
 lines.solid_capstyle: round
