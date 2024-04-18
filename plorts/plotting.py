@@ -92,12 +92,41 @@ def plot(data, x, y, error=None, *args, **kwargs):
     plt.xlabel(x)
     plt.gca().autoscale(tight=True)
     plt.gca().margins(y=0.1)
+    
+def interp_nans(x, y):
+    is_nan = np.isnan(y)
+    res = y * 1.0
+    res[is_nan] = np.interp(x[is_nan], x[-is_nan], y[-is_nan])
+    return res
+
+def interp(df, x, y):
+    df = df.sort_values(x)
+    df[y] = interp_nans(df[x], df[y])
+    return df[[x,y]]
 
 def stackplot(data, x, y, hue, cmap=palettes.neon):
-    xs = np.array(data[x])
+    combined_df = []
+    for x_val in df[x]:
+        for h_val in set(df[hue]):
+            matches = df[(df[x] == x_val) & (df[hue] == h_val)]
+            if len(matches) == 0:
+                combined_df.append(pd.DataFrame([{
+                    x: x_val,
+                    y: None,
+                    hue: h_val
+                }]))
+            elif len(matches) == 1:
+                combined_df.append(matches)
+            else:
+                print(matches)
+    combined_df = pd.concat(combined_df)
+    
+    interpolated = combined_df.groupby(hue).apply(lambda df: interp(df, x, y)).reset_index()
+
+    xs = np.array(interpolated[x])
     yss = []
     labels = []
-    for k,grp in data.groupby(hue):
+    for k,grp in interpolated.groupby(hue):
         labels.append(k)
         grp_xs = grp[x].tolist()
         grp_ys = grp[y].tolist()
@@ -117,7 +146,7 @@ def stackplot(data, x, y, hue, cmap=palettes.neon):
         yss.append(np.array(ys, dtype=float))
 
     if cmap is not None:
-        colors = colors_from_hue(data, hue, cmap)
+        colors = colors_from_hue(interpolated, hue, cmap)
     else:
         colors = None
 
