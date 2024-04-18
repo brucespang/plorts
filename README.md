@@ -3,7 +3,7 @@
 [![Documentation Status](https://readthedocs.org/projects/plorts/badge/?version=latest)](https://plorts.readthedocs.io/en/latest/?badge=latest)
 
 
-Like seaborn but with less stuff and also it starts faster
+A thin wrapper around matplotlib that handles a lot of common plots I need to make.
 
 ```
 $ pip install plorts
